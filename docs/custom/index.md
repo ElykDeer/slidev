@@ -156,6 +156,9 @@ layout: <"cover" if the slide is the first slide, otherwise "default">
 level: 1
 # mount this slide before entering
 preload: true
+# mark this slide as nested below the previous non-nested slide
+# Learn more: https://sli.dev/guide/syntax.html#slide-separators
+nested: false
 # create a route alias that can be used in the URL or with the <Link> component
 routeAlias: undefined # or string
 # includes a markdown file

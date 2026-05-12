@@ -15,7 +15,13 @@ import SlideContainer from './SlideContainer.vue'
 import SlideWrapper from './SlideWrapper.vue'
 
 const nav = useNav()
-const { currentSlideNo, go: goSlide, slides } = nav
+const { currentSlideNo, go: goSlide, slides, hasGrid } = nav
+
+const numCols = computed(() => {
+  if (!hasGrid.value)
+    return 1
+  return (slides.value[slides.value.length - 1]?.meta.slide?.gridCol ?? 0) + 1
+})
 
 function close() {
   showOverview.value = false
@@ -122,13 +128,17 @@ watchEffect(() => {
       @click="close"
     >
       <div
-        class="grid gap-y-4 gap-x-8 w-full"
-        :style="`grid-template-columns: repeat(auto-fit,minmax(${cardWidth}px,1fr))`"
+        class="grid gap-y-4 gap-x-8"
+        :class="hasGrid ? '' : 'w-full'"
+        :style="hasGrid
+          ? `grid-template-columns: repeat(${numCols}, ${cardWidth}px)`
+          : `grid-template-columns: repeat(auto-fit,minmax(${cardWidth}px,1fr))`"
       >
         <div
           v-for="(route, idx) of slides"
           :key="route.no"
           class="relative"
+          :style="hasGrid ? { gridColumn: (route.meta.slide?.gridCol ?? 0) + 1, gridRow: (route.meta.slide?.gridRow ?? 0) + 1 } : undefined"
         >
           <div
             class="inline-block border rounded overflow-hidden bg-main hover:border-primary transition"
